@@ -3,6 +3,7 @@ package org.example.training;
 import org.example.interfaces.BaseDAO;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -31,8 +32,18 @@ public class TrainingDAO implements BaseDAO<Training> {
 
 	@Override
 	public Training createOrUpdate(Training entity) {
+		Transaction transaction = null;
 		try (Session session = sessionFactory.openSession()) {
+
+			transaction = session.beginTransaction();
 			session.saveOrUpdate(entity);
+			transaction.commit();
+		}
+		catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
 		}
 		return entity;
 	}

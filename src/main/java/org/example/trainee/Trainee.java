@@ -28,14 +28,12 @@ public class Trainee {
 	}
 
 	@OneToOne(cascade = CascadeType.ALL)
-
 	private User user;
 
 	@OneToMany(mappedBy = "trainee", cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
 	private List<Training> trainings;
 
 	@OneToMany(mappedBy = "trainee", fetch = FetchType.EAGER)
-
 	private List<TraineeTrainer> trainingSessions;
 
 	public List<Training> getTrainings() {

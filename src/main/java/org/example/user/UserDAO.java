@@ -35,9 +35,10 @@ public class UserDAO implements BaseDAO<User> {
 
 	@Override
 	public User createOrUpdate(User entity) {
+		Transaction transaction = null;
 
 		try (Session session = sessionFactory.openSession()) {
-			Transaction transaction = session.beginTransaction();
+			transaction = session.beginTransaction();
 
 			entity.setUsername(generateUsername(entity.getFirstName(), entity.getLastName()));
 			entity.setPassword(generatePassword());
@@ -45,6 +46,12 @@ public class UserDAO implements BaseDAO<User> {
 			session.saveOrUpdate(entity);
 			transaction.commit();
 
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			if (transaction != null) {
+				transaction.rollback();
+			}
 		}
 		return entity;
 

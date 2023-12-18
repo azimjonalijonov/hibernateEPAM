@@ -12,7 +12,6 @@ public class Trainer {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-
 	private Long id;
 
 	@OneToMany(mappedBy = "trainer", fetch = FetchType.EAGER)

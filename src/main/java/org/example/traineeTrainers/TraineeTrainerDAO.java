@@ -2,6 +2,7 @@ package org.example.traineeTrainers;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 public class TraineeTrainerDAO {
 
@@ -12,8 +13,17 @@ public class TraineeTrainerDAO {
 	}
 
 	public TraineeTrainer createOrUpdate(TraineeTrainer traineeTrainer) {
+		Transaction transaction = null;
 		try (Session session = sessionFactory.openSession()) {
+			transaction = session.beginTransaction();
 			session.saveOrUpdate(traineeTrainer);
+			transaction.commit();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			if (transaction != null) {
+				transaction.rollback();
+			}
 		}
 		return traineeTrainer;
 	}

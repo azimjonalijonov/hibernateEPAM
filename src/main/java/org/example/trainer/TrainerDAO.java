@@ -5,6 +5,7 @@ import org.example.user.User;
 import org.example.user.UserDAO;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -43,8 +44,18 @@ public class TrainerDAO implements BaseDAO<Trainer> {
 
 	@Override
 	public Trainer createOrUpdate(Trainer entity) {
+		Transaction transaction = null;
 		try (Session session = sessionFactory.openSession()) {
-			session.saveOrUpdate(entity);
+			transaction = session.beginTransaction();
+			entity = (Trainer) session.merge(entity);
+			transaction.commit();
+		}
+		catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
+
 		}
 		return entity;
 	}

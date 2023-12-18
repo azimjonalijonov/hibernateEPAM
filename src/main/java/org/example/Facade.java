@@ -149,7 +149,7 @@ public class Facade {
 		logger.info("---------------------------------------------------------------------------------------------");
 		logger.info("---------------------------------------------------------------------------------------------");
 		Trainer trainer = trainerService.readById(1l);
-		trainer.setId(3l);
+		trainer.setSpecialization(trainingTypeService.readById(1l));
 		Trainer trainerUpdated = trainerService.update(trainer);
 		logger.info(trainerUpdated.toString());
 

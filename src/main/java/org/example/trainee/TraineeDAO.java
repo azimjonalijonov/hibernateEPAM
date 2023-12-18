@@ -6,6 +6,7 @@ import org.example.user.User;
 import org.example.user.UserDAO;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -38,9 +39,19 @@ public class TraineeDAO implements BaseDAO<Trainee> {
 
 	@Override
 	public Trainee createOrUpdate(Trainee entity) {
+		Transaction transaction = null;
 		try (Session session = sessionFactory.openSession()) {
-			session.saveOrUpdate(entity);
+			transaction = session.beginTransaction();
+			session.merge(entity);
+			transaction.commit();
 
+		}
+		catch (Exception e) {
+
+			e.printStackTrace();
+			if (transaction != null) {
+				transaction.rollback();
+			}
 		}
 		return entity;
 	}
